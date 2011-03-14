@@ -294,7 +294,7 @@ Heli.Audio = function(game) {
         progressEvents[name] = function(event) { progress(event, name, cb); };
         
         f.addEventListener("canplaythrough", progressEvents[name], true);
-        f.setAttribute("preload", "true");
+        f.setAttribute("preload", "auto");
         f.setAttribute("autobuffer", "true");
         f.setAttribute("src", path);
         f.pause();        
