@@ -402,11 +402,11 @@ var HELICOPTER = (function() {
         } else if (state === Heli.State.WAITING && e.keyCode === KEY.ENTER) { 
             newGame();
         } else if (state === Heli.State.PLAYING && e.keyCode === KEY.P) {
-            state = Heli.State.PAUSE;
+            state = Heli.State.PAUSED;
             window.clearInterval(timer);
             timer = null;
             dialog("Paused");
-        } else if (state === Heli.State.PAUSE && e.keyCode === KEY.P) {
+        } else if (state === Heli.State.PAUSED && e.keyCode === KEY.P) {
             state = Heli.State.PLAYING;
             timer = window.setInterval(mainLoop, 1000/Heli.FPS);            
         }
