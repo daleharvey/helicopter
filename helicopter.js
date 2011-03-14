@@ -420,6 +420,7 @@ var HELICOPTER = (function() {
     };
 
     function mouseDown(e) { 
+        audio.play("start");
         thrustersOn = true;
         if (e.target.nodeName === "CANVAS" && state === Heli.State.WAITING) { 
             newGame();
@@ -427,6 +428,7 @@ var HELICOPTER = (function() {
     };
 
     function mouseUp(e) { 
+        audio.stop("start");
         thrustersOn = false;
     };
 
