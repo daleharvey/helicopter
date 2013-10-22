@@ -575,11 +575,9 @@ var HELICOPTER = (function() {
       localStorage.soundDisabled = true;
     }
 
-    var ext = Modernizr.audio.ogg ? 'ogg' : 'mp3';
-
     var audio_files = [
-      ['start', root + 'motor.' + ext],
-      ['crash', root + 'crash.' + ext]
+      ['start', root + 'motor.ogg'],
+      ['crash', root + 'crash.ogg']
     ];
 
     load(audio_files, function () { loaded(); });

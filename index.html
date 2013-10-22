@@ -20,26 +20,19 @@
   <div id="helicopter"></div>
 
   <script src="js/helicopter.js"></script>
-  <script src="js/modernizr-1.5.min.js"></script>
 
   <script>
 
     var families = ['SilkScreenBold', 'SilkScreen'];
 
-    var INIT = (function (m, HELICOPTER, families) {
+    var INIT = (function (HELICOPTER, families) {
 
       var numLoaded  = 0;
       var numFonts   = families.length;
       var helicopter = document.getElementById('helicopter');
 
-    function loaded() {
-        if (m.canvas && m.localstorage && m.audio && 
-            (m.audio.ogg || m.audio.mp3)) {
-          HELICOPTER.init(helicopter, './');
-        } else {    
-          el.innerHTML = 'Sorry, needs a decent browser<br /><small>' + 
-            '(firefox 3.6+, Chrome 4+, Opera 10+ and Safari 4+)</small>';
-        }    
+      function loaded() {
+        HELICOPTER.init(helicopter, './');
       };
 
       function fontLoaded(family, desc) {
@@ -50,7 +43,7 @@
     
       return {fontLoaded: fontLoaded};
 
-    })(Modernizr, HELICOPTER, families);
+    })(HELICOPTER, families);
 
     WebFontConfig = { 
       custom : { 
