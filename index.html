@@ -5,13 +5,10 @@
     <title>HTML5 Helicopter</title>
     
     <style type="text/css">
-       * { margin:0px; padding:0px; }
-       body { width:500px; margin:0px auto; background:black; }
-       #helicopter { margin: 10px 0px; font-family:SilkScreenBold; }
-       a { font-family:SilkScreen; color:white; text-decoration:none; }
-       a:hover { text-decoration:underline; }
-       body { visibility:hidden; }
-       html.wf-silkscreen-n4-active body { visibility:visible; }
+       * { margin: 0; padding: 0; }
+       #helicopter { margin: 0; font-family:SilkScreenBold; }
+       body { visibility: hidden; }
+       html.wf-silkscreen-n4-active body { visibility: visible; }
     </style>
 
 </head>
@@ -22,29 +19,26 @@
 
   <div id="helicopter"></div>
 
-  <a href="http://arandomurl.com/" style="float:left">Writeup</a>
-  <a href="http://arandomurl.com/" style="float:right">Github</a>
-
   <script src="helicopter.js"></script>
   <script src="modernizr-1.5.min.js"></script>
 
   <script>
 
-    var families = [ "SilkScreenBold", "SilkScreen"];
+    var families = ['SilkScreenBold', 'SilkScreen'];
 
     var INIT = (function (m, HELICOPTER, families) {
 
-      var numLoaded  = 0, 
-          numFonts   = families.length,
-          helicopter = document.getElementById("helicopter");
+      var numLoaded  = 0;
+      var numFonts   = families.length;
+      var helicopter = document.getElementById('helicopter');
 
-      function loaded() { 
+    function loaded() {
         if (m.canvas && m.localstorage && m.audio && 
             (m.audio.ogg || m.audio.mp3)) {
-          HELICOPTER.init(helicopter, "./");
+          HELICOPTER.init(helicopter, './');
         } else {    
-          el.innerHTML = "Sorry, needs a decent browser<br /><small>" + 
-            "(firefox 3.6+, Chrome 4+, Opera 10+ and Safari 4+)</small>";
+          el.innerHTML = 'Sorry, needs a decent browser<br /><small>' + 
+            '(firefox 3.6+, Chrome 4+, Opera 10+ and Safari 4+)</small>';
         }    
       };
 
@@ -54,14 +48,14 @@
         }
       };
     
-      return {"fontLoaded" : fontLoaded};
+      return {fontLoaded: fontLoaded};
 
     })(Modernizr, HELICOPTER, families);
 
     WebFontConfig = { 
       custom : { 
         families : families, 
-        urls     : ["./silkscreenbold.css", "./silkscreen.css"]
+        urls     : ['./silkscreenbold.css', './silkscreen.css']
       },
       fontactive : INIT.fontLoaded
     };
