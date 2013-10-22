@@ -1,6 +1,4 @@
-/*jslint browser: true, undef: true, eqeqeq: true, nomen: true, white: true */
-/*global window: false, document: false */
-/* Human readable keyCode index */
+'use strict';
 
 var KEY = {
   'BACKSPACE': 8, 'TAB': 9, 'NUM_PAD_CLEAR': 12, 'ENTER': 13, 'SHIFT': 16,
@@ -40,19 +38,19 @@ var KEY = {
 var Heli = {};
 
 Heli.Consts = [
-  {name: "State", consts: ["WAITING", "PAUSED", "PLAYING", "DYING"]},
-  {name: "Dir",   consts: ["UP", "DOWN"]}
+  {name: 'State', consts: ['WAITING', 'PAUSED', 'PLAYING', 'DYING']},
+  {name: 'Dir',   consts: ['UP', 'DOWN']}
 ];
 
 Heli.FOOTER_HEIGHT = 20;
 Heli.FPS           = 19;
 
 Heli.Color = {
-  BACKGROUND  : "#C3CCB5", BLOCK         : "#403B37",
-  HOME_TEXT   : "#403B37", RAND_BLOCK    : "#403B37",
-  USER        : "#FFFF00", TARGET_STROKE : "#B24524",
-  DIALOG_TEXT : "#333333", FOOTER_BG     : "#403B37",
-  FOOTER_TEXT : "#C3CCB5"
+  BACKGROUND  : '#C3CCB5', BLOCK         : '#403B37',
+  HOME_TEXT   : '#403B37', RAND_BLOCK    : '#403B37',
+  USER        : '#FFFF00', TARGET_STROKE : '#B24524',
+  DIALOG_TEXT : '#333333', FOOTER_BG     : '#403B37',
+  FOOTER_TEXT : '#C3CCB5'
 };
 
 Heli.User = function (params) {
@@ -106,53 +104,52 @@ Heli.User = function (params) {
   }
 
   return {
-    "reset":reset,
-    "move":move,
-    "trail":trail,
-    "distance":distance,
-    "finished":finished,
-    "bestDistance":bestDistance
+    reset: reset,
+    move: move,
+    trail: trail,
+    distance:distance,
+    finished: finished,
+    bestDistance: bestDistance
   };
 };
 
 Heli.Screen = function (params) {
 
-  var _width       = params.width,
-  _height      = params.height,
-  _numLines    = 30,
-  _direction   = Heli.Dir.UP,
-  _lineWidth   = _width / _numLines,
-  _lineHeight  = _height / 100,
-  _gap         = null,
-  _randomBlock = null,
-  magnitude    = null,
-  changeDir    = 0,
-  _blockY      = null,
-  _blockHeight = 20,
-  heliHeight   = (30 / params.height) * 100, // Convert px to %
-  _terrain     = [],
-  img = new Image(),
-  img2 = new Image();
+  var _width = params.width;
+  var _height = params.height;
+  var _numLines = 30;
+  var _direction = Heli.Dir.UP;
+  var _lineWidth = _width / _numLines;
+  var _lineHeight = _height / 100;
+  var _gap = null;
+  var _randomBlock = null;
+  var magnitude = null;
+  var changeDir = 0;
+  var _blockY = null;
+  var _blockHeight = 20;
+  var heliHeight = (30 / params.height) * 100; // Convert px to %
+  var _terrain = [];
+  var img = new Image();
+  var img2 = new Image();
 
   img.src = './heli.png';
   img2.src = './heli2.png';
 
-  function width()  { return _width; }
+  function width() { return _width; }
   function height() { return _height; }
-
+  
   function init() {
 
-    manitude = null;
+    magnitude = null;
     changeDir = 0;
     _randomBlock = null;
     _gap = 80;
     _terrain = [];
 
-    var i,
-    size = (100 - _gap) / 2,
-    obj  = {"top":size, "bottom":size};
+    var size = (100 - _gap) / 2;
+    var obj  = {top: size, bottom: size};
 
-    for (i = 0; i < _numLines; i += 1) {
+    for (var i = 0; i < _numLines; i += 1) {
       _terrain.push(obj);
     }
   }
@@ -173,8 +170,8 @@ Heli.Screen = function (params) {
 
   function moveTerrain() {
 
-    var toAdd, len, rand,
-    last = _terrain[Math.round(_terrain.length-1)];
+    var toAdd, len, rand;
+    var last = _terrain[Math.round(_terrain.length-1)];
 
     if (_randomBlock === null) {
       rand = Math.floor(Math.random() * 50);
@@ -205,13 +202,15 @@ Heli.Screen = function (params) {
 
     changeDir--;
 
-    toAdd = (_direction === Heli.Dir.UP) ? {"top":-magnitude,"bottom":magnitude}
-    : {"top":magnitude,"bottom":-magnitude};
+    toAdd = (_direction === Heli.Dir.UP) ? 
+      {top: -magnitude, bottom: magnitude} : 
+      {top: magnitude, bottom: -magnitude};
 
     _terrain.push({
-      "top":last.top + toAdd.top,
-      "bottom":last.bottom + toAdd.bottom
+      top: last.top + toAdd.top,
+      bottom: last.bottom + toAdd.bottom
     });
+
     _terrain.shift();
   }
 
@@ -247,19 +246,6 @@ Heli.Screen = function (params) {
 
     var i, len, mid, image;
 
-    //         for (i = trail.length - 1, len = trail.length; i > 0; i -= 1) {
-    //             ctx.fillStyle = "rgba(255, 255, 255, " + (i / len) + ")";
-    //             ctx.beginPath();
-    //             ctx.drawImage(cloud,
-    //                           (_width * .25) - ((len - i) * (_lineWidth * 2)),
-    //                           toPix(trail[i-1]));
-
-    // //            ctx.arc((_width * .25) - ((len - i) * (_lineWidth * 2)),
-    //   //                  toPix(trail[i-1]), 5, 0, Math.PI * 2, false);
-    //             ctx.fill();
-    //             ctx.closePath();
-    //        }
-
     mid = Math.round(_terrain.length * 0.25);
     image = (alternate && params.tick()) % 4 < 2 ? img : img2;
 
@@ -273,9 +259,9 @@ Heli.Screen = function (params) {
 
   function collided(pos) {
 
-    var midPoint = Math.round(_terrain.length * 0.25),
-    middle = _terrain[midPoint],
-    size = heliHeight / 2;
+    var midPoint = Math.round(_terrain.length * 0.25);
+    var middle = _terrain[midPoint];
+    var size = heliHeight / 2;
 
     var hitBlock = (_randomBlock === midPoint ||
                     _randomBlock === midPoint-1) &&
@@ -300,44 +286,45 @@ Heli.Screen = function (params) {
   }
 
   return {
-    "draw"        : draw,
-    "drawUser"    : drawUser,
-    "drawTerrain" : drawTerrain,
-    "moveTerrain" : moveTerrain,
-    "drawTarget"  : drawTarget,
-    "toPix"       : toPix,
-    "init"        : init,
-    "width"       : width,
-    "height"      : height,
-    "collided"    : collided
+    draw: draw,
+    drawUser: drawUser,
+    drawTerrain: drawTerrain,
+    moveTerrain: moveTerrain,
+    drawTarget: drawTarget,
+    toPix: toPix,
+    init: init,
+    width: width,
+    height: height,
+    collided: collided
   };
 };
 
 Heli.Audio = function(game) {
 
-  var files          = [],
-  endEvents      = [],
-  progressEvents = [],
-  playing        = [];
+  var files = [];
+  var endEvents = [];
+  var progressEvents = [];
+  var playing = [];
 
   function load(name, path, cb) {
 
-    var f = files[name] = document.createElement("audio");
+    var f = files[name] = document.createElement('audio');
 
     progressEvents[name] = function(event) { progress(event, name, cb); };
 
-    f.addEventListener("canplaythrough", progressEvents[name], true);
-    f.setAttribute("preload", "auto");
-    f.setAttribute("autobuffer", "true");
-    f.setAttribute("src", path);
+    f.addEventListener('canplaythrough', progressEvents[name], true);
+    f.setAttribute('preload', 'auto');
+    f.setAttribute('autobuffer', 'true');
+    f.setAttribute('src', path);
     f.pause();
   }
 
   function progress(event, name, callback) {
-    if (event.loaded === event.total && typeof callback === "function") {
+    if (event.loaded === event.total && 
+        typeof callback === 'function') {
       callback();
-      files[name].removeEventListener("canplaythrough",
-                                      progressEvents[name], true);
+      files[name]
+        .removeEventListener('canplaythrough', progressEvents[name], true);
     }
   }
 
@@ -358,7 +345,7 @@ Heli.Audio = function(game) {
 
     var i, tmp = [], found = false;
 
-    files[name].removeEventListener("ended", endEvents[name], true);
+    files[name].removeEventListener('ended', endEvents[name], true);
 
     for (i = 0; i < playing.length; i++) {
       if (!found && playing[i]) {
@@ -374,7 +361,7 @@ Heli.Audio = function(game) {
     if (!game.soundDisabled()) {
       endEvents[name] = function() { ended(name); };
       playing.push(name);
-      files[name].addEventListener("ended", endEvents[name], true);
+      files[name].addEventListener('ended', endEvents[name], true);
       files[name].play();
     }
   }
@@ -392,12 +379,12 @@ Heli.Audio = function(game) {
   }
 
   return {
-    "disableSound" : disableSound,
-    "load"         : load,
-    "play"         : play,
-    "stop"         : stop,
-    "pause"        : pause,
-    "resume"       : resume
+    disableSound: disableSound,
+    load: load,
+    play: play,
+    stop: stop,
+    pause: pause,
+    resume: resume
   };
 };
 
@@ -413,23 +400,24 @@ var HELICOPTER = (function() {
     }
   })(Heli, Heli.Consts);
 
-  var state       = Heli.State.WAITING,
-  thrustersOn = false,
-  timer       = null,
-  audio       = null,
-  screen      = null,
-  user        = null,
-  pos         = 0,
-  died        = 0,
-  _tick        = 0;
+  var state = Heli.State.WAITING;
+  var thrustersOn = false;
+  var timer = null;
+  var audio = null;
+  var screen = null;
+  var user = null;
+  var pos = 0;
+  var died = 0;
+  var _tick = 0;
+  var ctx; 
 
   function keyDown(e) {
 
-    if(e.keyCode === KEY.ENTER) {
-      audio.play("start");
+    if (e.keyCode === KEY.ENTER) {
+      audio.play('start');
       thrustersOn = true;
     }
-
+    
     if (e.keyCode === KEY.S) {
       localStorage.soundDisabled = !soundDisabled();
     } else if (state === Heli.State.WAITING && e.keyCode === KEY.ENTER) {
@@ -438,7 +426,7 @@ var HELICOPTER = (function() {
       state = Heli.State.PAUSED;
       window.clearInterval(timer);
       timer = null;
-      dialog("Paused");
+      dialog('Paused');
     } else if (state === Heli.State.PAUSED && e.keyCode === KEY.P) {
       state = Heli.State.PLAYING;
       timer = window.setInterval(mainLoop, 1000/Heli.FPS);
@@ -446,22 +434,22 @@ var HELICOPTER = (function() {
   }
 
   function keyUp(e) {
-    if(e.keyCode === KEY.ENTER) {
-      audio.stop("start");
+    if (e.keyCode === KEY.ENTER) {
+      audio.stop('start');
       thrustersOn = false;
     }
   }
 
   function mouseDown(e) {
-    audio.play("start");
+    audio.play('start');
     thrustersOn = true;
-    if (e.target.nodeName === "CANVAS" && state === Heli.State.WAITING) {
+    if (e.target.nodeName === 'CANVAS' && state === Heli.State.WAITING) {
       newGame();
     }
   }
 
   function mouseUp(e) {
-    audio.stop("start");
+    audio.stop('start');
     thrustersOn = false;
   }
 
@@ -479,17 +467,17 @@ var HELICOPTER = (function() {
   }
 
   function dialog(text) {
-    var textWidth = ctx.measureText(text).width,
-    x = (screen.width() - textWidth) / 2,
-    y = (screen.height() / 2) - 7;
+    var textWidth = ctx.measureText(text).width;
+    var x = (screen.width() - textWidth) / 2;
+    var y = (screen.height() / 2) - 7;
 
     ctx.fillStyle = Heli.Color.DIALOG_TEXT;
-    ctx.font      = "14px silkscreen";
+    ctx.font = '14px silkscreen';
     ctx.fillText(text, x, y);
   }
 
   function soundDisabled() {
-    return localStorage.soundDisabled === "true";
+    return localStorage.soundDisabled === 'true';
   }
 
   function mainLoop() {
@@ -509,7 +497,7 @@ var HELICOPTER = (function() {
         if (tmp !== true) {
           pos = tmp;
         }
-        audio.play("crash");
+        audio.play('crash');
         state = Heli.State.DYING;
         died = _tick;
         user.finished();
@@ -517,7 +505,7 @@ var HELICOPTER = (function() {
       screen.drawUser(ctx, pos, user.trail(), true);
 
     } else if (state === Heli.State.DYING && (_tick - died) > (Heli.FPS / 1)) {
-      dialog("Press enter to start again.");
+      dialog('Press enter to start again.');
 
       state = Heli.State.WAITING;
       window.clearInterval(timer);
@@ -537,12 +525,12 @@ var HELICOPTER = (function() {
 
   function drawScore() {
 
-    ctx.font = "12px silkscreen";
+    ctx.font = '12px silkscreen';
 
-    var recordText = "Best: " + user.bestDistance() + "m",
-    distText   = "Distance: " + user.distance() + "m",
-    textWidth  = ctx.measureText(recordText).width,
-    textX      = screen.height() + 15;
+    var recordText = 'Best: ' + user.bestDistance() + 'm';
+    var distText = 'Distance: ' + user.distance() + 'm';
+    var textWidth = ctx.measureText(recordText).width;
+    var textX = screen.height() + 15;
 
     ctx.fillStyle = Heli.Color.FOOTER_BG;
     ctx.fillRect(0, screen.height(), screen.width(), Heli.FOOTER_HEIGHT);
@@ -554,25 +542,27 @@ var HELICOPTER = (function() {
 
   function init(wrapper, root) {
 
-    var width  = wrapper.offsetWidth,
-    height = (width / 4) * 3,
-    canvas = document.createElement("canvas");
+    var width  = wrapper.offsetWidth;
+    var height = (width / 4) * 3;
+    var canvas = document.createElement('canvas');
 
-    canvas.setAttribute("width", width + "px");
-    canvas.setAttribute("height", (height + 20) + "px");
+    canvas.setAttribute('width', width + 'px');
+    canvas.setAttribute('height', (height + 20) + 'px');
 
     wrapper.appendChild(canvas);
 
     ctx = canvas.getContext('2d');
 
     audio = new Heli.Audio({
-      "soundDisabled" : soundDisabled
+      soundDisabled: soundDisabled
     });
+
     screen = new Heli.Screen({
-      "tick"   : tick,
-      "width"  : width,
-      "height" : height
+      tick: tick,
+      width: width,
+      height: height
     });
+
     user = new Heli.User({"tick":tick});
 
     screen.init();
@@ -581,15 +571,15 @@ var HELICOPTER = (function() {
     dialog("Loading ...");
 
     // disable sound while it sucks
-    if (typeof localStorage.soundDisabled === "undefined") {
+    if (typeof localStorage.soundDisabled === 'undefined') {
       localStorage.soundDisabled = true;
     }
 
     var ext = Modernizr.audio.ogg ? 'ogg' : 'mp3';
 
     var audio_files = [
-      ["start", root + "motor." + ext],
-      ["crash", root + "crash." + ext]
+      ['start', root + 'motor.' + ext],
+      ['crash', root + 'crash.' + ext]
     ];
 
     load(audio_files, function () { loaded(); });
@@ -613,34 +603,34 @@ var HELICOPTER = (function() {
     drawScore();
 
     ctx.fillStyle = Heli.Color.HOME_TEXT;
-    ctx.font = "58px silkscreenbold";
+    ctx.font = '58px silkscreenbold';
 
-    var text = "helicopter";
+    var text = 'helicopter';
     var textWidth = ctx.measureText(text).width,
     x = (screen.width() - textWidth) / 2,
     y = screen.height() / 3;
 
     ctx.fillText(text, x, y);
 
-    var t  = "Click and hold enter key of Mouse Button";
-    var t1 = "to go up, release to go down.";
+    var t  = 'Click and hold enter key of Mouse Button';
+    var t1 = 'to go up, release to go down.';
 
-    ctx.font = "12px silkscreen";
+    ctx.font = '12px silkscreen';
 
     ctx.fillText(t, x + 5, y + 20);
     ctx.fillText(t1, x + 5, y + 33);
 
-    ctx.fillText("press enter or click mouse to start", x + 5, y + 66);
-    ctx.fillText("by dale harvey / arandomurl.com", x + 5, y + 145);
+    ctx.fillText('press enter or click mouse to start', x + 5, y + 66);
+    ctx.fillText('by dale harvey / arandomurl.com', x + 5, y + 145);
   }
 
 
   function loaded() {
-    document.addEventListener("keydown", keyDown, true);
-    document.addEventListener("keyup", keyUp, true);
+    document.addEventListener('keydown', keyDown, true);
+    document.addEventListener('keyup', keyUp, true);
 
-    document.addEventListener("mousedown", mouseDown, true);
-    document.addEventListener("mouseup", mouseUp, true);
+    document.addEventListener('mousedown', mouseDown, true);
+    document.addEventListener('mouseup', mouseUp, true);
 
     startScreen();
   }
