@@ -132,8 +132,8 @@ Heli.Screen = function (params) {
   var img = new Image();
   var img2 = new Image();
 
-  img.src = './heli.png';
-  img2.src = './heli2.png';
+  img.src = 'style/img/heli.png';
+  img2.src = 'style/img/heli2.png';
 
   function width() { return _width; }
   function height() { return _height; }
