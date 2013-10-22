@@ -216,11 +216,9 @@ Heli.Screen = function (params) {
 
   function drawTerrain(ctx) {
 
-    var i, obj, bottom;
-
     ctx.fillStyle = Heli.Color.BLOCK;
 
-    for (i = 0; i < _numLines; i += 1) {
+    for (var obj, bottom, i = 0; i < _numLines; i += 1) {
       obj = _terrain[i];
       bottom = obj.bottom;
       ctx.fillRect(Math.floor(i * _lineWidth), 0,
@@ -238,8 +236,6 @@ Heli.Screen = function (params) {
       ctx.fillRect(_randomBlock * _lineWidth, start,
                    _lineWidth, start - toPix(_blockY + _blockHeight));
     }
-
-
   }
 
   function drawUser(ctx, user, trail, alternate) {
@@ -543,11 +539,11 @@ var HELICOPTER = (function() {
   function init(wrapper, root) {
 
     var width  = wrapper.offsetWidth;
-    var height = (width / 4) * 3;
+    var height = wrapper.offsetHeight;
     var canvas = document.createElement('canvas');
 
     canvas.setAttribute('width', width + 'px');
-    canvas.setAttribute('height', (height + 20) + 'px');
+    canvas.setAttribute('height', height + 'px');
 
     wrapper.appendChild(canvas);
 
