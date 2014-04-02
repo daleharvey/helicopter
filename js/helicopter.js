@@ -572,8 +572,8 @@ var HELICOPTER = (function() {
     }
 
     var audio_files = [
-      ['start', root + 'motor.ogg'],
-      ['crash', root + 'crash.ogg']
+      ['start', root + 'assets/sound/motor.ogg'],
+      ['crash', root + 'assets/sound/crash.ogg']
     ];
 
     load(audio_files, function () { loaded(); });
