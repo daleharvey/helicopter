@@ -505,7 +505,8 @@ var HELICOPTER = (function () {
     }
 
     function mainLoop() {
-
+        updatePitch(0);
+        resetBuffer();
         ++_tick;
         var crashed = false;
 
@@ -631,6 +632,7 @@ var HELICOPTER = (function () {
     }
 
     function startScreen() {
+        toggleLiveInput();
 
         screen.draw(ctx);
         screen.drawTerrain(ctx);
