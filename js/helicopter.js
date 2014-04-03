@@ -81,11 +81,16 @@ Heli.User = function (params) {
         momentum = 0;
     }
 
-    function move(thrusters) {
+    function move(up_thrusters,down_thrusters) {
 
         _distance += 1;
 
-        momentum += ((thrusters) ? 0.4 : -0.5);
+        if (up_thrusters) {
+            momentum += 0.4;
+        }
+        if (down_thrusters){
+            momentum -= 0.4
+        }
         position += momentum;
 
         if (params.tick() % 2 === 0) {
@@ -412,7 +417,8 @@ var HELICOPTER = (function () {
     })(Heli, Heli.Consts);
 
     var state = Heli.State.WAITING;
-    var thrustersOn = false;
+    var upThrustersOn = false;
+    var downThrustersOn = false;
     var timer = null;
     var audio = null;
     var screen = null;
@@ -426,7 +432,10 @@ var HELICOPTER = (function () {
 
         if (e.keyCode === KEY.ENTER) {
             //audio.play('start');
-            thrustersOn = true;
+            upThrustersOn = true;
+        }
+        if (e.keyCode === KEY.SHIFT){
+            downThrustersOn = true;
         }
 
         if (e.keyCode === KEY.S) {
@@ -447,13 +456,17 @@ var HELICOPTER = (function () {
     function keyUp(e) {
         if (e.keyCode === KEY.ENTER) {
             //audio.stop('start');
-            thrustersOn = false;
+            upThrustersOn = false;
+        }
+        if (e.keyCode === KEY.SHIFT) {
+            //audio.stop('start');
+            downThrustersOn = false;
         }
     }
 
     function mouseDown(e) {
         //audio.play('start');
-        thrustersOn = true;
+        upThrustersOn = true;
         if (e.target.nodeName === 'CANVAS' && state === Heli.State.WAITING) {
             newGame();
         }
@@ -461,7 +474,7 @@ var HELICOPTER = (function () {
 
     function mouseUp(e) {
         //audio.stop('start');
-        thrustersOn = false;
+        upThrustersOn = false;
     }
 
     function tick() {
@@ -498,7 +511,7 @@ var HELICOPTER = (function () {
 
         if (state === Heli.State.PLAYING) {
 
-            pos = user.move(thrustersOn);
+            pos = user.move(upThrustersOn,downThrustersOn);
             screen.moveTerrain();
 
             screen.draw(ctx);
