@@ -2,6 +2,7 @@ var audioContext = new AudioContext();
 var analyser = null;
 var confidence = 0;
 var currentPitch = 0;
+var  mediaStreamSource = null;
 
 
 function error() {
@@ -21,19 +22,31 @@ function getUserMedia(dictionary, callback) {
 }
 
 function gotStream(stream) {
-    // Create an AudioNode from the stream.
-    var mediaStreamSource = audioContext.createMediaStreamSource(stream);
 
+    // Create an AudioNode from the stream.
+    if (mediaStreamSource === null){
+        mediaStreamSource = audioContext.createMediaStreamSource(stream);
+    }
     // Connect it to the destination.
     analyser = audioContext.createAnalyser();
     analyser.fftSize = 2048;
     mediaStreamSource.connect(analyser);
-    updatePitch();
+    //updatePitch();
 }
+
+var new_analyzer = function(){
+    analyser = audioContext.createAnalyser();
+    analyser.fftSize = 2048;
+    mediaStreamSource.connect(analyser);
+};
 
 function toggleLiveInput() {
     getUserMedia({audio: true}, gotStream);
 }
+
+var init = function(){
+
+};
 
 
 var buflen = 2048;
@@ -52,7 +65,7 @@ function autoCorrelate(buf, sampleRate) {
     currentPitch = 0;
 
     if (buf.length < (SIZE + MAX_SAMPLES - MIN_SAMPLES))
-        return;  // Not enough data
+        return 0;  // Not enough data
 
     for (var i = 0; i < SIZE; i++) {
         var val = (buf[i] - 128) / 128;
@@ -77,23 +90,20 @@ function autoCorrelate(buf, sampleRate) {
         confidence = best_correlation * rms * 10000;
         currentPitch = sampleRate / best_offset;
         console.log(currentPitch);
-        // console.log("f = " + sampleRate/best_offset + "Hz (rms: " + rms + " confidence: " + best_correlation + ")")
+
     }
 
+    return currentPitch;
 
-//	var best_frequency = sampleRate/best_offset;
+
 }
 
 function updatePitch(time) {
+    //new_analyzer();
     analyser.getByteTimeDomainData(buf);
-    // possible other approach to confidence: sort the array, take the median; go through the array and compute the average deviation
-    autoCorrelate(buf, audioContext.sampleRate);
+    pitch = autoCorrelate(buf, audioContext.sampleRate);
+    //toggleLiveInput();
+    return pitch;
 
-
-// 	detectorElem.className = (confidence>50)?"confident":"vague";
 
 }
-
-var resetBuffer = function () {
-    buf = new Uint8Array(buflen);
-};

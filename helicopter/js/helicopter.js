@@ -53,6 +53,9 @@ Heli.Color = {
     FOOTER_TEXT: '#C3CCB5'
 };
 
+var prev_pitch = 0;
+var curr_pitch = 0;
+
 Heli.User = function (params) {
 
     var _distance = 0;
@@ -81,17 +84,23 @@ Heli.User = function (params) {
         momentum = 0;
     }
 
-    function move(up_thrusters,down_thrusters) {
 
+    function move(up_thrusters, down_thrusters) {
+        curr_pitch = updatePitch(0);
         _distance += 1;
 
-        if (up_thrusters) {
-            momentum += 0.4;
+        if (50 < curr_pitch && curr_pitch < 6000) {
+            if (curr_pitch > 400) {
+                position += 1;
+                console.log("up " + curr_pitch)
+            }
+            else if (curr_pitch < 400) {
+                position -= 1;
+                console.log("down " + curr_pitch)
+            }
         }
-        if (down_thrusters){
-            momentum -= 0.4
-        }
-        position += momentum;
+
+
 
         if (params.tick() % 2 === 0) {
             _trail.push(position);
@@ -253,10 +262,10 @@ Heli.Screen = function (params) {
         var i, len, mid, image;
 
         mid = Math.round(_terrain.length * 0.25);
-        if (crashed){
+        if (crashed) {
             image = img2;
         }
-        else{
+        else {
             image = img;
         }
 
@@ -434,7 +443,7 @@ var HELICOPTER = (function () {
             //audio.play('start');
             upThrustersOn = true;
         }
-        if (e.keyCode === KEY.SHIFT){
+        if (e.keyCode === KEY.SHIFT) {
             downThrustersOn = true;
         }
 
@@ -505,14 +514,13 @@ var HELICOPTER = (function () {
     }
 
     function mainLoop() {
-        updatePitch(0);
-        resetBuffer();
+
         ++_tick;
         var crashed = false;
 
         if (state === Heli.State.PLAYING) {
 
-            pos = user.move(upThrustersOn,downThrustersOn);
+            pos = user.move(upThrustersOn, downThrustersOn);
             screen.moveTerrain();
 
             screen.draw(ctx);
@@ -576,6 +584,7 @@ var HELICOPTER = (function () {
 
     function init(wrapper, root) {
 
+        toggleLiveInput();
         var width = wrapper.offsetWidth;
         var height = wrapper.offsetHeight;
         var canvas = document.createElement('canvas');
@@ -632,7 +641,7 @@ var HELICOPTER = (function () {
     }
 
     function startScreen() {
-        toggleLiveInput();
+
 
         screen.draw(ctx);
         screen.drawTerrain(ctx);
@@ -649,13 +658,11 @@ var HELICOPTER = (function () {
 
         ctx.fillText(text, x, y);
 
-        var t = 'Click and hold enter key of Mouse Button';
-        var t1 = 'to go up, release to go down.';
+
 
         ctx.font = '12px silkscreen';
 
-        ctx.fillText(t, x + 5, y + 20);
-        ctx.fillText(t1, x + 5, y + 33);
+
 
         ctx.fillText('press enter or click mouse to start', x + 5, y + 66);
         ctx.fillText('by sexy platypuses', x + 5, y + 145);
